@@ -4,6 +4,7 @@ import org.javers.core.Javers;
 import org.javers.core.JaversBuilder;
 import org.javers.core.diff.Diff;
 import org.javers.core.metamodel.annotation.DiffIgnore;
+import org.javers.core.metamodel.clazz.ValueObjectDefinitionBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -11,7 +12,13 @@ import org.slf4j.LoggerFactory;
 
 class JaverTest {
 
-    public static Javers JAVERS = JaversBuilder.javers().build();
+    public static Javers JAVERS = JaversBuilder.javers()
+        .registerValueObject(
+            ValueObjectDefinitionBuilder.valueObjectDefinition(Address.class)
+                // ignored prop also does not work for Object class
+                .withIgnoredProperties("addressLine")
+                .build())
+        .build();
     private static Logger log = LoggerFactory.getLogger(JaverTest.class);
 
     @Test
